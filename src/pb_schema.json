@@ -1,0 +1,37 @@
+[
+  {
+    "name": "projects",
+    "type": "base",
+    "schema": [
+      {"name": "name", "type": "text", "required": true},
+      {"name": "projectCode", "type": "text"},
+      {"name": "unitName", "type": "text"},
+      {"name": "grants", "type": "json"},
+      {"name": "budgetItems", "type": "json"},
+      {"name": "representative", "type": "json"},
+      {"name": "liaison", "type": "json"}
+    ]
+  },
+  {
+    "name": "counseling_records",
+    "type": "base",
+    "schema": [
+      {"name": "projectId", "type": "relation", "options": {"collectionId": "projects"}},
+      {"name": "location", "type": "text"},
+      {"name": "date", "type": "date"},
+      {"name": "progressStatus", "type": "select", "options": {"values": ["嚴重落後", "稍微落後", "符合", "超前進度"]}},
+      {"name": "coachObservation", "type": "json"},
+      {"name": "photos", "type": "file", "options": {"maxSelect": 10}}
+    ]
+  },
+  {
+    "name": "final_reports",
+    "type": "base",
+    "schema": [
+      {"name": "projectId", "type": "relation", "options": {"collectionId": "projects"}},
+      {"name": "comprehensiveOpinion", "type": "editor"},
+      {"name": "visitSummaries", "type": "json"},
+      {"name": "allPhotos", "type": "file", "options": {"maxSelect": 20}}
+    ]
+  }
+]
