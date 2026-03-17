@@ -1,5 +1,4 @@
 import PocketBase from 'pocketbase';
 
-export const pb = new PocketBase('http://43.160.229.239:8090');
-
+export const pb = new PocketBase('https://api-moc.atipd.tw');
 pb.autoCancellation(false);
