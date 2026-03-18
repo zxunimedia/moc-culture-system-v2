@@ -1,23 +1,22 @@
 import React, { useState } from 'react';
 import { pb } from '../pocketbase'; // 連結你寫好的 pocketbase.ts
+import { User } from '../types';
 
-const Login = () => {
+interface LoginProps {
+  onLogin?: (user: User) => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // 1. 執行登入
       const authData = await pb.collection('users').authWithPassword(email, password);
-      
-      // 2. 登入成功後，取得用戶角色 (對應你的 UserRole enum)
-      const role = authData.record.role;
-      console.log("登入成功，角色為:", role);
-
-      // 3. 根據角色跳轉頁面 (這裡可以加導向邏輯)
-      alert(`歡迎回來！您的身份是：${role}`);
-      
+      const fullUser = await pb.collection('users').getOne<User>(authData.record.id);
+      pb.authStore.save(authData.token, fullUser as unknown as Record<string, unknown>);
+      onLogin?.(fullUser);
     } catch (error) {
       alert("登入失敗，請檢查帳號密碼");
     }

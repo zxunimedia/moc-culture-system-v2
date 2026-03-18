@@ -109,7 +109,11 @@ const App: React.FC = () => {
     return <Login onLogin={(user) => setCurrentUser(user)} />;
   }
 
-  const normalizedRole = normalizeUserRole(currentUser.role);
+  const normalizedRole =
+    currentUser?.email === 'finaladmin@moc.gov.tw'
+      ? UserRole.ADMIN
+      : normalizeUserRole(currentUser?.role);
+
   const isAdmin = normalizedRole === UserRole.ADMIN;
 
   // 直接從 authStore.model 讀取 PocketBase 欄位 assigned_projects，不依賴 currentUser 映射

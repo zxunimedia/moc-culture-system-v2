@@ -35,9 +35,6 @@ const iconMap: Record<string, React.ComponentType<{ size?: number; className?: s
   migration: Database,
 };
 
-// 必備：儀表板、計畫管理、月報管理、輔導紀錄、結案報告
-// 僅 admin：撥付進度、權限與用戶管理、下載專區、新案提案、資料遷移、帳號設定
-// operator：儀表板、計畫管理、月報管理（不可見撥付進度／權限／遷移／新案／帳號設定）
 const menuItems: { id: string; label: string; roles: string[] }[] = [
   { id: 'dashboard', label: '儀表板總覽', roles: [UserRole.ADMIN, UserRole.COACH, UserRole.OPERATOR] },
   { id: 'projects', label: '計畫管理', roles: [UserRole.ADMIN, UserRole.COACH, UserRole.OPERATOR] },
@@ -53,7 +50,12 @@ const menuItems: { id: string; label: string; roles: string[] }[] = [
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, userRole }) => {
-  const visibleMenu = menuItems.filter((item) => userRole && item.roles.includes(userRole));
+  const effectiveRole =
+    userRole === UserRole.ADMIN || userRole === 'admin' ? UserRole.ADMIN : userRole;
+
+  const visibleMenu = menuItems.filter(
+    (item) => !!effectiveRole && item.roles.includes(effectiveRole)
+  );
 
   const handleForceRefresh = () => {
     const url = new URL(window.location.href);
@@ -72,7 +74,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab, userRole }) 
         />
         <div className="flex flex-col">
           <h1 className="font-black text-lg leading-tight tracking-tighter text-white">文化部原村計畫</h1>
-          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Management System</span>
+          <span className="text-slate-400 text-[10px] font-bold uppercase tracking-widest">
+            Management System
+          </span>
         </div>
       </div>
 
